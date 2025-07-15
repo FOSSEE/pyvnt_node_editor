@@ -1,0 +1,519 @@
+{
+  "version": "1.0",
+  "case_type": "openfoam_case_generator",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 581.9704230628984,
+        "y": 0.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "object"
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 537.0306220541803,
+        "y": -305.5906468592825
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "class"
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 579.7234330124625,
+        "y": -629.1572141220523
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "format"
+      }
+    },
+    {
+      "id": "node_4",
+      "type": "CaseFolderOutputNode",
+      "position": {
+        "x": 1962.8665151328496,
+        "y": -98.4218782422337
+      },
+      "properties": {},
+      "pyvnt_data": {}
+    },
+    {
+      "id": "node_5",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 1002.788948128419,
+        "y": -131.84817651318102
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "object"
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 932.222318445308,
+        "y": -324.97789985643203
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "class"
+      }
+    },
+    {
+      "id": "node_7",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 978.6477327105125,
+        "y": -492.10939121116854
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "format"
+      }
+    },
+    {
+      "id": "node_8",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 1314.7677319905936,
+        "y": -298.9796678679175
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "FoamFile"
+      }
+    },
+    {
+      "id": "node_9",
+      "type": "OutputGraphicalNode",
+      "position": {
+        "x": 1671.8855751109168,
+        "y": 3.6187999461275253
+      },
+      "properties": {},
+      "pyvnt_data": {}
+    },
+    {
+      "id": "node_10",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 180.0,
+        "y": 2460.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "enum_val"
+      }
+    },
+    {
+      "id": "node_11",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 480.0,
+        "y": 2410.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "type"
+      }
+    },
+    {
+      "id": "node_12",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 780.0,
+        "y": 2190.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "fnb"
+      }
+    },
+    {
+      "id": "node_13",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 180.0,
+        "y": 1910.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "enum_val"
+      }
+    },
+    {
+      "id": "node_14",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 480.0,
+        "y": 1860.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "type"
+      }
+    },
+    {
+      "id": "node_15",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 780.0,
+        "y": 1640.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "fWalls"
+      }
+    },
+    {
+      "id": "node_16",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 180.0,
+        "y": 1360.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "enum_val"
+      }
+    },
+    {
+      "id": "node_17",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 480.0,
+        "y": 1310.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "type"
+      }
+    },
+    {
+      "id": "node_18",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 780.0,
+        "y": 1090.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "mWall"
+      }
+    },
+    {
+      "id": "node_19",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 1080.0,
+        "y": 870.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "boundaryField"
+      }
+    },
+    {
+      "id": "node_20",
+      "type": "Flt_PGraphicalNode",
+      "position": {
+        "x": 600.0,
+        "y": 690.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "float_val"
+      }
+    },
+    {
+      "id": "node_21",
+      "type": "Flt_PGraphicalNode",
+      "position": {
+        "x": 600.0,
+        "y": 640.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "float_val"
+      }
+    },
+    {
+      "id": "node_22",
+      "type": "Enm_PGraphicalNode",
+      "position": {
+        "x": 600.0,
+        "y": 590.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "enum_val"
+      }
+    },
+    {
+      "id": "node_23",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 900.0,
+        "y": 540.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "internalField"
+      }
+    },
+    {
+      "id": "node_24",
+      "type": "Dim_Set_PGraphicalNode",
+      "position": {
+        "x": 600.0,
+        "y": 290.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "dim_set"
+      }
+    },
+    {
+      "id": "node_25",
+      "type": "Key_CGraphicalNode",
+      "position": {
+        "x": 900.0,
+        "y": 240.0
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "dimensions"
+      }
+    },
+    {
+      "id": "node_26",
+      "type": "Node_CGraphicalNode",
+      "position": {
+        "x": 1344.7519978451012,
+        "y": 103.23239876093308
+      },
+      "properties": {},
+      "pyvnt_data": {
+        "name": "P"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "start_node": "node_2",
+      "end_node": "node_6",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_1",
+      "end_node": "node_5",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_3",
+      "end_node": "node_7",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_9",
+      "end_node": "node_4",
+      "start_socket": 0,
+      "end_socket": 2,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_5",
+      "end_node": "node_8",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_6",
+      "end_node": "node_8",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_7",
+      "end_node": "node_8",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_8",
+      "end_node": "node_26",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_26",
+      "end_node": "node_9",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_19",
+      "end_node": "node_26",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_23",
+      "end_node": "node_26",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_25",
+      "end_node": "node_26",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_12",
+      "end_node": "node_19",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_15",
+      "end_node": "node_19",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_18",
+      "end_node": "node_19",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_11",
+      "end_node": "node_12",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_10",
+      "end_node": "node_11",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_14",
+      "end_node": "node_15",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_13",
+      "end_node": "node_14",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_17",
+      "end_node": "node_18",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_16",
+      "end_node": "node_17",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_20",
+      "end_node": "node_23",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_21",
+      "end_node": "node_23",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_22",
+      "end_node": "node_23",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    },
+    {
+      "start_node": "node_24",
+      "end_node": "node_25",
+      "start_socket": 0,
+      "end_socket": 0,
+      "start_socket_type": "output",
+      "end_socket_type": "input"
+    }
+  ],
+  "scene_properties": {
+    "dark_mode": false
+  }
+}

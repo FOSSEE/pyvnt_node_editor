@@ -1,0 +1,4 @@
+# Required Python packages for CaseGenerator
+PyQt6>=6.0.0
+typing-extensions>=4.0.0
+pyvnt>=0.0.0
