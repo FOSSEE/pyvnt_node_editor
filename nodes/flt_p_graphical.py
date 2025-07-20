@@ -9,16 +9,15 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.width = 300  # Increased from 250 for better visibility
-        
         # Create the UI widgets
         self._create_float_widgets()
-        
         # Add output socket (circular for single connection)
         self.add_output_socket(multi_connection=False)
-        
         # Update height based on content
         self._update_height()
-        
+    def set_on_property_changed(self, callback):
+        self.on_property_changed = callback
+
     def _create_float_widgets(self):
         """Create float property widgets with name field"""
         style = "color: white; font-size: 14px; font-family: Arial; font-weight: bold; padding: 2px;"
@@ -63,6 +62,7 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
                 background-color: #4a4a4a;
             }
         """)
+        self.name_edit.textChanged.connect(self._on_name_changed)
         self.name_proxy = QGraphicsProxyWidget(self)
         self.name_proxy.setWidget(self.name_edit)
         
@@ -78,6 +78,7 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
         self.value_spin.setValue(1e-06)  # Set default to 1e-06 like in demo cases
         self.value_spin.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Enable keyboard focus
         self.value_spin.setStyleSheet(spin_style)
+        self.value_spin.valueChanged.connect(self._on_value_changed)
         self.value_proxy = QGraphicsProxyWidget(self)
         self.value_proxy.setWidget(self.value_spin)
         
@@ -93,6 +94,7 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
         self.min_spin.setValue(0.0)  # PyVNT default minimum
         self.min_spin.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Enable keyboard focus
         self.min_spin.setStyleSheet(spin_style)
+        self.min_spin.valueChanged.connect(self._on_min_changed)
         self.min_proxy = QGraphicsProxyWidget(self)
         self.min_proxy.setWidget(self.min_spin)
         
@@ -108,6 +110,7 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
         self.max_spin.setValue(100.0)  # PyVNT default maximum
         self.max_spin.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Enable keyboard focus
         self.max_spin.setStyleSheet(spin_style)
+        self.max_spin.valueChanged.connect(self._on_max_changed)
         self.max_proxy = QGraphicsProxyWidget(self)
         self.max_proxy.setWidget(self.max_spin)
         
@@ -187,3 +190,15 @@ class Flt_PGraphicalNode(BaseGraphicalNode):
             maximum=max_val  # User-specified maximum
         )
         return pyvnt_float
+
+    def _on_value_changed(self, value):
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'value', value)
+
+    def _on_min_changed(self, value):
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'min', value)
+
+    def _on_max_changed(self, value):
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'max', value)

@@ -58,6 +58,33 @@ class NodeListWidget(QListWidget):
 
 
 class MainWindow(QMainWindow):
+    def _on_node_property_changed(self, prop, value):
+        # Always update the properties panel for the last selected node
+        node = self._last_selected_node if hasattr(self, '_last_selected_node') else None
+        if node:
+            self.update_properties_panel(node)
+    def update_properties_panel(self, node=None):
+        """Update the properties panel with the selected node's properties"""
+        if node is None:
+            # Try to get selected node from current scene
+            scene = self.get_current_editor_scene()
+            if scene:
+                selected = [item for item in scene.selectedItems() if hasattr(item, 'get_node_title')]
+                node = selected[0] if selected else None
+        self.properties_panel.set_node(node)
+        # Set up live update callback for node property changes
+        if node and hasattr(node, 'on_property_changed'):
+            node.on_property_changed = lambda n, prop, value: self._on_node_property_changed(prop, value)
+        self._last_selected_node = node
+
+    def highlight_selected_node(self, node):
+        """Highlight the selected node with a thick orange border, remove from others"""
+        scene = self.get_current_editor_scene()
+        if not scene:
+            return
+        for item in scene.items():
+            if hasattr(item, 'set_highlighted'):
+                item.set_highlighted(item is node)
     """Main application window"""
     
     def __init__(self):
@@ -121,8 +148,8 @@ class MainWindow(QMainWindow):
         # Create first tab with default case
         self._create_new_case_tab()
         
-        # Set splitter proportions (left pane: 120px, editor: rest)
-        splitter.setSizes([120, 880])
+        # Set splitter proportions (left pane: 180px, editor: rest)
+        splitter.setSizes([180, 880])
         splitter.setCollapsible(0, False)  # Left pane cannot be collapsed
         
         self.setGeometry(100, 100, 1200, 800)
@@ -199,8 +226,17 @@ class MainWindow(QMainWindow):
         
         # Connect signals
         editor_view.node_created.connect(self.on_node_created)
-        
-        # Connect undo/redo signals
+        # Connect selection change to update properties panel and highlight
+        def on_selection_changed():
+            try:
+                selected = [item for item in editor_scene.selectedItems() if hasattr(item, 'get_node_title')]
+                node = selected[0] if selected else None
+                self.update_properties_panel(node)
+                self.highlight_selected_node(node)
+            except RuntimeError:
+                # Scene or items have been deleted; safely ignore
+                return
+        editor_scene.selectionChanged.connect(on_selection_changed)
         editor_scene.undo_manager.can_undo_changed.connect(self._update_undo_action)
         editor_scene.undo_manager.can_redo_changed.connect(self._update_redo_action)
         editor_scene.undo_manager.undo_text_changed.connect(self._update_undo_text)
@@ -339,28 +375,35 @@ class MainWindow(QMainWindow):
         return None
 
     def _create_left_pane(self):
-        """Create the left control pane"""
+        """Create the left control pane (now extendible, no fixed width)"""
         left_widget = QWidget()
-        left_widget.setFixedWidth(120)
+        # Remove fixed width to allow splitter resizing
         left_widget.setStyleSheet(LEFT_PANE_STYLES)
-        
+
         layout = QVBoxLayout(left_widget)
         layout.setSpacing(10)
         layout.setContentsMargins(10, 10, 10, 10)
-        
+
         # Node Library Group
         nodes_group = QGroupBox("Node Library")
         nodes_layout = QVBoxLayout(nodes_group)
-        
-        # Create node list for other nodes - no height restriction to show all nodes
+
+        # Node list: no scroll bars, show all nodes, no height restriction
         self.node_list = NodeListWidget()
-        
+        self.node_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.node_list.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.node_list.setSizeAdjustPolicy(self.node_list.SizeAdjustPolicy.AdjustToContents)
+        self.node_list.setMaximumHeight(16777215)  # No height restriction
+        self.node_list.setMinimumHeight(0)
+        from PyQt6.QtWidgets import QFrame
+        self.node_list.setFrameShape(QFrame.Shape.NoFrame)
+
         # Add all available node types
         node_types = [
             "Node_C",
             "Key_C",
             "Enm_P",
-            "Int_P", 
+            "Int_P",
             "Flt_P",
             "Vector_P",
             "Dim_Set_P",
@@ -370,17 +413,20 @@ class MainWindow(QMainWindow):
             "Output",
             "Case Folder"
         ]
-        
         for node_type in node_types:
             item = QListWidgetItem(node_type)
             self.node_list.addItem(item)
-     
+
         nodes_layout.addWidget(self.node_list)
         layout.addWidget(nodes_group)
-        
+
+        # --- Properties Panel ---
+        from view.properties_panel import PropertiesPanel
+        self.properties_panel = PropertiesPanel()
+        layout.addWidget(self.properties_panel)
+
         # Add stretch to push everything to top
         layout.addStretch()
-        
         return left_widget
     
     def _open_case(self):
@@ -714,10 +760,10 @@ class MainWindow(QMainWindow):
         if type(graphics_node).__name__ == 'CaseFolderOutputNode':
             if hasattr(graphics_node, 'set_default_output_dir'):
                 graphics_node.set_default_output_dir(self.default_output_dir)
-        
         # Mark current tab as modified
         self._mark_tab_modified()
-        # You can add logic here to update properties pane, etc.
+        self.update_properties_panel(graphics_node)
+        self.highlight_selected_node(graphics_node)
 
     def _create_menu(self):
         """Create the menu bar"""

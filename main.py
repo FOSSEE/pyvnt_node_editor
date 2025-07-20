@@ -5,8 +5,6 @@ OpenFOAM Case Generator - Main Application Entry Point
 import sys
 import os
 
-
-
 from PyQt6.QtWidgets import QApplication
 from view.main_window import MainWindow
 

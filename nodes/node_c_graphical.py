@@ -21,10 +21,8 @@ class Node_CGraphicalNode(BaseGraphicalNode):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        
         # Node_C specific setup
         self.width = 220  # Increased from 180 for better visibility
-        
         # Create name widget
         self.create_name_widget("default_node", "Node name...")
         
@@ -82,7 +80,6 @@ class Node_CGraphicalNode(BaseGraphicalNode):
             
             # Get all connected elements (Key_C and Node_C)
             connected_elements = self.get_connected_element_names()
-            
             if not connected_elements:
                 QMessageBox.information(
                     None,
@@ -90,17 +87,26 @@ class Node_CGraphicalNode(BaseGraphicalNode):
                     "This node has no connected elements to order."
                 )
                 return
-            
-            # Create the dialog
+            # Use custom order if set, else default
+            if self.custom_element_order:
+                order_names = [name for name in self.custom_element_order if name in connected_elements]
+                # Add any new elements not in the custom order
+                for name in connected_elements:
+                    if name not in order_names:
+                        order_names.append(name)
+            else:
+                order_names = connected_elements
             dialog = ElementOrderDialog(
                 parent=None,
-                node_data=connected_elements,
+                node_data=order_names,
                 title=f"Set Element Order for {self.name_edit.text()}"
             )
             
             # Show dialog and get results
             if dialog.exec() == QDialog.DialogCode.Accepted:
                 self.custom_element_order = dialog.get_ordered_elements()
+                if self.on_property_changed:
+                    self.on_property_changed(self, 'element_order', self.custom_element_order)
                 QMessageBox.information(
                     None,
                     "Order Set",
@@ -117,6 +123,8 @@ class Node_CGraphicalNode(BaseGraphicalNode):
     def reset_element_order(self):
         """Reset any custom element order"""
         self.custom_element_order = None
+        if self.on_property_changed:
+            self.on_property_changed(self, 'element_order', self.custom_element_order)
         QMessageBox.information(
             None,
             "Order Reset",
@@ -221,3 +229,13 @@ class Node_CGraphicalNode(BaseGraphicalNode):
                 print(f"Warning: Failed to apply custom element order: {e}")
         
         return pyvnt_node
+    
+    def onSocketConnected(self, socket):
+        # When a new element is connected, refresh element order in panel
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'element_order', self.custom_element_order)
+
+    def onSocketDisconnected(self, socket):
+        # When an element is disconnected, refresh element order in panel
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'element_order', self.custom_element_order)

@@ -9,13 +9,10 @@ class Vector_PGraphicalNode(BaseGraphicalNode):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.width = 280  # Wider for vector input controls
-        
         # Create the UI widgets
         self._create_vector_widgets()
-        
         # Add output socket (circular for single connection)
         self.add_output_socket(multi_connection=False)
-        
         # Update height based on content
         self._update_height()
     
@@ -62,6 +59,7 @@ class Vector_PGraphicalNode(BaseGraphicalNode):
                 background-color: #4a4a4a;
             }
         """)
+        self.name_edit.textChanged.connect(self._on_name_changed)
         self.name_proxy = QGraphicsProxyWidget(self)
         self.name_proxy.setWidget(self.name_edit)
         

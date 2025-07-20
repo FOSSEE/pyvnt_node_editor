@@ -24,6 +24,12 @@ from utils.case_utils import resolve_case_path, CaseManager, validate_case_name,
 
 
 class CaseFolderOutputNode(BaseGraphicalNode):
+    def set_case_name_from_panel(self, text):
+        """Set the case_name_edit text from the properties panel, avoiding signal loops."""
+        if self.case_name_edit.text() != text:
+            old_block = self.case_name_edit.blockSignals(True)
+            self.case_name_edit.setText(text)
+            self.case_name_edit.blockSignals(old_block)
     """
     Advanced output node that creates complete OpenFOAM case folder structures.
     

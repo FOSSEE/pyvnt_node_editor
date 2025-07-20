@@ -16,6 +16,9 @@ class Enm_PGraphicalNode(BaseGraphicalNode):
         self.add_output_socket(multi_connection=False)
         self._update_height()
     
+    def set_on_property_changed(self, callback):
+        self.on_property_changed = callback
+
     def _create_enum_widgets(self):
         """Create simple, efficient enum property widgets"""
         style = "color: white; font-size: 14px; font-family: Arial; font-weight: bold; padding: 2px;"
@@ -267,10 +270,23 @@ class Enm_PGraphicalNode(BaseGraphicalNode):
         self.default_proxy.setWidget(self.default_combo)
         
         # Update default combo when items selection changes
-        self.items_list.itemSelectionChanged.connect(self._update_default_options)
+        self.items_list.itemSelectionChanged.connect(self._on_items_selection_changed)
+        self.default_combo.currentTextChanged.connect(self._on_default_changed)
         
         # Initialize default options
         self._update_default_options()
+    
+    def _on_items_selection_changed(self):
+        self._update_default_options()
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'items', self.get_selected_items())
+
+    def get_selected_items(self):
+        return [self.items_list.item(i).text() for i in range(self.items_list.count()) if self.items_list.item(i).isSelected()]
+
+    def _on_default_changed(self, value):
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'default', value)
     
     def _update_default_options(self):
         """Update default combo options when items selection changes"""

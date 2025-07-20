@@ -9,14 +9,11 @@ class Tensor_PGraphicalNode(BaseGraphicalNode):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.width = 340  # Increased from 320 for better layout
-        
+        self.width = 320  # Decreased width to fit components tightly
         # Create the UI widgets
         self._create_tensor_widgets()
-        
         # Add output socket (circular for single connection)
         self.add_output_socket(multi_connection=False)
-        
         # Update height based on content
         self._update_height()
     
@@ -177,47 +174,38 @@ class Tensor_PGraphicalNode(BaseGraphicalNode):
         
         # Component spin boxes (arrange in grid if 3x3, 2x2, etc.)
         size = len(self.component_spins)
-        if size == 4:  # 2x2 tensor
-            cols, rows = 2, 2
-        elif size == 9:  # 3x3 tensor
-            cols, rows = 3, 3
-        elif size == 16:  # 4x4 tensor
-            cols, rows = 4, 4
-        else:  # Linear arrangement for other sizes
-            cols, rows = min(3, size), (size + 2) // 3
-        
-        component_width = 80
-        component_height = 28  # Increased from 25 for better spacing
+        # Always use 2 columns per row for all sizes
+        cols = 2
+        rows = (size + cols - 1) // cols
+
+        component_width = 110  # More width per component
+        component_height = 36
         start_x = self.content_margin
-        
+
+        h_spacing = 32  # Increased horizontal spacing to prevent overlap
+        v_spacing = 4  # Reduced vertical spacing, but enough to avoid overlap
+
         for i, proxy in enumerate(self.component_proxies):
             row = i // cols
             col = i % cols
-            x = start_x + col * (component_width + 5)
-            y = y_offset + row * (component_height + 4)  # Increased margin
+            x = start_x + col * (component_width + h_spacing)
+            y = y_offset + row * (component_height + v_spacing)
             proxy.setPos(x, y)
     
     def _update_height(self):
         """Update node height based on number of components"""
         base_height = 140  # Increased from 120 for better spacing
-        
+
         # Calculate additional height for components
-        size = len(self.component_spins) if hasattr(self, 'component_spins') else 9
-        if size == 4:  # 2x2
-            rows = 2
-        elif size == 9:  # 3x3
-            rows = 3
-        elif size == 16:  # 4x4
-            rows = 4
-        else:  # Linear
-            rows = (size + 2) // 3
-        
-        component_height = rows * 32  # Increased from 28 for better spacing
+        size = len(self.component_spins) if hasattr(self, 'component_spins') else 0
+        cols = 2
+        rows = (size + cols - 1) // cols if size > 0 else 0
+        component_height = rows * 36 + max(0, (rows - 1) * 4)  # Match reduced vertical spacing
         self.height = base_height + component_height
-        
+
         # Position widgets after height update
         self._position_widgets()
-        
+
         # Position sockets and update graphics
         self._position_sockets()
         self.prepareGeometryChange()

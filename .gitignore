@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# PyVNT related files - ignore changes
+venv/pyvnt/
+
+# Parser generated files
+loader/parser/parser.out
+loader/parser/parsetab.py
+
+# Output directory
+/output/
+
+# IDE files
+.idea/
+.vscode/
+
+# Log files
+*.log

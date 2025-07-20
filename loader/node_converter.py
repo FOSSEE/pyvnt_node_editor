@@ -474,8 +474,8 @@ class NodeConverter:
         
         # Set the name from the List_CP object
         if hasattr(list_cp, 'name'):
-            if hasattr(visual_node, 'name_input'):
-                visual_node.name_input.setText(list_cp.name)
+            if hasattr(visual_node, 'name_edit'):
+                visual_node.name_edit.setText(list_cp.name)
         
         # Set the isNode property
         if hasattr(list_cp, 'is_a_node') and hasattr(visual_node, 'isnode_checkbox'):

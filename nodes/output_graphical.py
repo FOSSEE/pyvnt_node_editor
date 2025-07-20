@@ -6,6 +6,12 @@ from nodes.base_graphical_node import BaseGraphicalNode
 from pyvnt.Converter.Writer.writer import writeTo
 
 class OutputGraphicalNode(BaseGraphicalNode):
+    def set_filename_from_panel(self, text):
+        """Set the filename_edit text from the properties panel, avoiding signal loops."""
+        if self.filename_edit.text() != text:
+            old_block = self.filename_edit.blockSignals(True)
+            self.filename_edit.setText(text)
+            self.filename_edit.blockSignals(old_block)
     """
     Terminal node for OpenFOAM file generation using PyVNT.
     Visual node with a single input socket and file generation controls.
@@ -13,14 +19,11 @@ class OutputGraphicalNode(BaseGraphicalNode):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.width = 240  # Increased from 200 for better visibility
-        
         # Output node has input socket (for receiving data) and output socket (for chaining to case folder)
-        self.add_input_socket(multi_connection=True)
+        self.add_input_socket(multi_connection=False)
         self.add_output_socket(multi_connection=True)  # Add output socket for case folder connection
-        
         # Create the UI widgets
         self._create_widgets()
-        
         # Update height based on content
         self._update_height()
     
@@ -124,7 +127,6 @@ class OutputGraphicalNode(BaseGraphicalNode):
         Returns dict with 'valid' boolean and 'message' string.
         Adds debug output and always treats List_CP as valid.
         """
-        print(f"DEBUG: Validating node at depth {depth}: {type(node).__name__}")
         try:
             from pyvnt.Reference.basic import Int_P, Flt_P, Enm_P, Str_P
             from pyvnt.Reference.vector import Vector_P
@@ -171,7 +173,6 @@ class OutputGraphicalNode(BaseGraphicalNode):
                 if not items:
                     return {"valid": False, "message": f"Key_C '{node.name}' has no values. Connect Int_P, Flt_P, Enm_P, Str_P, Vector_P, Dim_Set_P, Tensor_P, or List_CP nodes to its inputs."}
                 for i, (key, value) in enumerate(items):
-                    print(f"DEBUG: Key_C '{node.name}' value '{key}' type: {type(value).__name__}")
                     # Always treat List_CP as valid
                     if isinstance(value, List_CP):
                         continue
@@ -188,15 +189,12 @@ class OutputGraphicalNode(BaseGraphicalNode):
                 return {"valid": False, "message": f"Key_C '{node.name}' validation error: {str(e)}"}
         # List_CP
         elif hasattr(node, '__class__') and 'List_CP' in node.__class__.__name__:
-            print(f"DEBUG: List_CP node at depth {depth} is always valid.")
-            # Always treat List_CP as valid
             pass
         # Value nodes (leaf nodes)
         elif (isinstance(node, (Int_P, Flt_P, Enm_P, Str_P, Vector_P, Dim_Set_P, Tensor_P)) or 
               hasattr(node, '__class__') and any(ptype in node.__class__.__name__ for ptype in ['Int_P', 'Flt_P', 'Enm_P', 'Str_P', 'Vector_P', 'Dim_Set_P', 'Tensor_P'])):
             pass
         else:
-            print(f"DEBUG: Unknown node type at depth {depth}: {type(node).__name__}")
             return {"valid": False, "message": f"Unknown PyVNT object type: {type(node).__name__}"}
         return {"valid": True, "message": "Valid"}
 

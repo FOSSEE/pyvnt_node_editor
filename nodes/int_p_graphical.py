@@ -10,16 +10,16 @@ class Int_PGraphicalNode(BaseGraphicalNode):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.width = 260
-        
         # Create the UI widgets
         self._create_integer_widgets()
-        
         # Add output socket (circular for single connection)
         self.add_output_socket(multi_connection=False)
-        
         # Update height based on content
         self._update_height()
     
+    def set_on_property_changed(self, callback):
+        self.on_property_changed = callback
+
     def _create_integer_widgets(self):
         """Create integer property widgets"""
         style = "color: white; font-size: 14px; font-family: Arial; font-weight: bold; padding: 2px;"
@@ -37,6 +37,7 @@ class Int_PGraphicalNode(BaseGraphicalNode):
         self.name_edit.setPlaceholderText("Enter parameter name")
         self.name_edit.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Enable keyboard focus
         self.name_edit.setStyleSheet(input_style)
+        self.name_edit.textChanged.connect(self._on_name_changed)
         self.name_proxy = QGraphicsProxyWidget(self)
         self.name_proxy.setWidget(self.name_edit)
         
@@ -51,6 +52,7 @@ class Int_PGraphicalNode(BaseGraphicalNode):
         self.value_spinbox.setValue(2)
         self.value_spinbox.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Enable keyboard focus
         self.value_spinbox.setStyleSheet(spinbox_style)
+        self.value_spinbox.valueChanged.connect(self._on_value_changed)
         self.value_proxy = QGraphicsProxyWidget(self)
         self.value_proxy.setWidget(self.value_spinbox)
     
@@ -107,3 +109,7 @@ class Int_PGraphicalNode(BaseGraphicalNode):
         )
         
         return pyvnt_int
+    
+    def _on_value_changed(self, value):
+        if hasattr(self, 'on_property_changed') and self.on_property_changed:
+            self.on_property_changed(self, 'value', value)

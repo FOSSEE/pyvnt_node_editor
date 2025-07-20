@@ -35,6 +35,19 @@ The project is architected into the following modules:
   - `socket.py`: Connection points on nodes for data flow
   - `undo_redo_manager.py`: Command pattern implementation for edit history
   - `commands.py`: Command objects for all editable operations
+  - `properties_panel.py`: The Properties Panel for editing node properties interactively
+## Properties Panel
+
+The **Properties Panel** (see `view/properties_panel.py`) is a dynamic sidebar that displays and allows editing of the properties for the currently selected node. It provides context-sensitive controls (such as text fields, spin boxes, checkboxes, and lists) that are tailored to the type of node selected. Changes made in the Properties Panel are synchronized with the node in real time, and vice versa. This enables quick, precise editing of node parameters, names, values, and other attributes without directly interacting with the node on the canvas.
+
+**Key features:**
+- Automatically updates to reflect the selected node's properties
+- Supports two-way synchronization between the panel and node widgets
+- Provides specialized controls for different node types (e.g., vectors, enums, lists)
+- Allows editing of advanced options like element order, case names, and output filenames
+- Ensures that all changes are immediately reflected in the node graph and output
+
+The Properties Panel is essential for efficient node configuration and is a core part of the application's workflow.
 
 - `config/`: Contains configuration-related functionality
   - `themes.py`: Theme definitions for UI customization

@@ -285,7 +285,6 @@ class DeleteNodeCommand(Command):
                     self.scene.addItem(edge)
                     
             except Exception as e:
-                print(f"Failed to restore edge: {e}")
                 continue
 
 
@@ -305,7 +304,6 @@ class MoveNodeCommand(Command):
             self._executed = True
             return True
         except Exception as e:
-            print(f"Failed to move node: {e}")
             return False
     
     def undo(self) -> bool:
@@ -315,7 +313,6 @@ class MoveNodeCommand(Command):
             self._executed = False
             return True
         except Exception as e:
-            print(f"Failed to undo node move: {e}")
             return False
 
 
@@ -347,7 +344,6 @@ class CreateEdgeCommand(Command):
             
             return True
         except Exception as e:
-            print(f"Failed to create edge: {e}")
             return False
     
     def undo(self) -> bool:
@@ -372,7 +368,6 @@ class CreateEdgeCommand(Command):
                 return True
             return False
         except Exception as e:
-            print(f"Failed to undo edge creation: {e}")
             return False
 
 
@@ -405,7 +400,6 @@ class DeleteEdgeCommand(Command):
                 return True
             return False
         except Exception as e:
-            print(f"Failed to delete edge: {e}")
             return False
     
     def undo(self) -> bool:
@@ -423,7 +417,6 @@ class DeleteEdgeCommand(Command):
             self._executed = False
             return True
         except Exception as e:
-            print(f"Failed to undo edge deletion: {e}")
             return False
 
 
@@ -444,7 +437,6 @@ class ChangeNodePropertyCommand(Command):
             self._executed = True
             return True
         except Exception as e:
-            print(f"Failed to change property: {e}")
             return False
     
     def undo(self) -> bool:
@@ -454,7 +446,6 @@ class ChangeNodePropertyCommand(Command):
             self._executed = False
             return True
         except Exception as e:
-            print(f"Failed to undo property change: {e}")
             return False
     
     def _set_property(self, value):
@@ -495,7 +486,6 @@ class CompositeCommand(Command):
                     cmd.undo()
                 except:
                     pass
-            print(f"Failed to execute composite command: {e}")
             return False
     
     def undo(self) -> bool:
@@ -509,5 +499,4 @@ class CompositeCommand(Command):
             self._executed = False
             return True
         except Exception as e:
-            print(f"Failed to undo composite command: {e}")
             return False

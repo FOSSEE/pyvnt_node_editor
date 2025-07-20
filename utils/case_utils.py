@@ -145,7 +145,6 @@ class CaseManager:
             shutil.copy2(file_path, backup_path)
             return backup_path
         except Exception as e:
-            print(f"Warning: Could not create backup of {file_path}: {e}")
             return None
     
     def add_file_to_folder(self, folder: str, filename: str, content: str, 
@@ -181,7 +180,6 @@ class CaseManager:
                 backup_path = self.backup_existing_file(folder, filename)
                 if backup_path:
                     backup_name = os.path.basename(backup_path)
-                    print(f"Created backup: {backup_name}")
         
         try:
             with open(file_path, 'w', encoding='utf-8') as f:

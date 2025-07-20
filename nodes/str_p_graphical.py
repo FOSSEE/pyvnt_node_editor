@@ -9,13 +9,10 @@ class Str_PGraphicalNode(BaseGraphicalNode):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.width = 260  # Wider for text input
-        
         # Create the UI widgets
         self._create_string_widgets()
-        
         # Add output socket (circular for single connection)
         self.add_output_socket(multi_connection=False)
-        
         # Update height based on content
         self._update_height()
     
@@ -48,6 +45,7 @@ class Str_PGraphicalNode(BaseGraphicalNode):
         self.name_edit.setText("format")  # Default OpenFOAM-like name
         self.name_edit.setPlaceholderText("Enter parameter name")
         self.name_edit.setStyleSheet(input_style)
+        self.name_edit.textChanged.connect(self._on_name_changed)
         self.name_proxy = QGraphicsProxyWidget(self)
         self.name_proxy.setWidget(self.name_edit)
         

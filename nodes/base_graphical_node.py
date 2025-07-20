@@ -8,8 +8,11 @@ from PyQt6.QtGui import QPainter, QPen, QBrush, QColor, QFont, QPainterPath, QAc
 
 from view.socket import Socket
 
-
 class BaseGraphicalNode(QGraphicsItem):
+    # (Removed property_changed signal; QGraphicsItem is not a QObject)
+    def set_highlighted(self, highlighted):
+        self._highlighted = highlighted
+        self.update()
     """
     Base class for all graphical nodes in the node editor.
     
@@ -20,9 +23,10 @@ class BaseGraphicalNode(QGraphicsItem):
     - Common layout and sizing logic
     - Name widget management
     """
-    
     def __init__(self, parent=None):
         super().__init__(parent)
+        # Optional callback for property changes (set by main window/scene)
+        self.on_property_changed = None  # Usage: fn(node, property_name, new_value)
         
         # Node dimensions (can be overridden by subclasses) - Increased for better visibility
         self.width = 300  # Increased from 220 for better visibility
@@ -105,7 +109,7 @@ class BaseGraphicalNode(QGraphicsItem):
         self.name_proxy = QGraphicsProxyWidget(self)
         self.name_proxy.setWidget(self.name_edit)
         
-        # Connect signal for name changes
+        # Connect signal for name changes (live sync)
         self.name_edit.textChanged.connect(self._on_name_changed)
         
         # Store the old name for undo tracking
@@ -142,14 +146,9 @@ class BaseGraphicalNode(QGraphicsItem):
         # Only create undo command if we have an old name and the scene supports undo
         if (hasattr(self, '_old_name') and self._old_name != text and 
             self.scene() and hasattr(self.scene(), 'undo_manager')):
-            
             from view.commands import ChangeNodePropertyCommand
             command = ChangeNodePropertyCommand(self, 'name', self._old_name, text)
-            
-            # Mark as executed since the change already happened
             command._executed = True
-            
-            # Only add if this isn't a duplicate
             manager = self.scene().undo_manager
             should_add = True
             if (manager.commands and manager.current_index >= 0 and 
@@ -158,19 +157,16 @@ class BaseGraphicalNode(QGraphicsItem):
                 if (last_cmd.node == self and last_cmd.property_name == 'name' and 
                     last_cmd.new_value == text and hasattr(last_cmd, '_executed') and last_cmd._executed):
                     should_add = False
-            
             if should_add:
-                # Remove any commands after current index
                 if manager.current_index < len(manager.commands) - 1:
                     manager.commands = manager.commands[:manager.current_index + 1]
-                
-                # Add the command
                 manager.commands.append(command)
                 manager.current_index += 1
                 manager._emit_state_changed()
-            
-            # Update old name
             self._old_name = text
+        # Notify via callback if set (for live panel update)
+        if self.on_property_changed:
+            self.on_property_changed(self, 'name', text)
     
     def add_input_socket(self, multi_connection=True):
         """
@@ -318,13 +314,17 @@ class BaseGraphicalNode(QGraphicsItem):
         # Draw main node body
         rect = QRectF(0, 0, self.width, self.height)
         
-        # Selection highlight
-        if self.isSelected():
+        # Selection or highlight
+        if getattr(self, '_highlighted', False):
+            selection_pen = QPen(QColor(255, 140, 0), 5)  # Thick orange
+            painter.setPen(selection_pen)
+            painter.setBrush(QBrush(self.background_color))
+            painter.drawRoundedRect(rect, 8, 8)
+        elif self.isSelected():
             selection_pen = QPen(self.selected_pen_color, 3)
             painter.setPen(selection_pen)
             painter.setBrush(QBrush(self.background_color))
             painter.drawRoundedRect(rect, 8, 8)
-        
         # Node background
         painter.setPen(QPen(self.border_color, 2))
         painter.setBrush(QBrush(self.background_color))

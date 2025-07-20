@@ -1,6 +1,6 @@
 """List_CPGraphicalNode class for PyQt6 node editor"""
 
-from PyQt6.QtWidgets import (QGraphicsProxyWidget, QLabel, QTextEdit, 
+from PyQt6.QtWidgets import (QGraphicsProxyWidget, QLabel, QLineEdit, QTextEdit, 
                            QPushButton, QVBoxLayout, QWidget, QHBoxLayout, QCheckBox)
 from PyQt6.QtCore import Qt
 from nodes.base_graphical_node import BaseGraphicalNode
@@ -59,14 +59,14 @@ class List_CPGraphicalNode(BaseGraphicalNode):
         self.name_label_proxy = QGraphicsProxyWidget(self)
         self.name_label_proxy.setWidget(self.name_label)
         
-        self.name_input = QTextEdit()
-        self.name_input.setPlaceholderText("Enter list name (e.g., 'boundary', 'vertices')")
-        self.name_input.setText("listVal")
-        self.name_input.setStyleSheet(input_style)
-        self.name_input.setMaximumHeight(25)
-        self.name_input.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.name_edit = QLineEdit()
+        self.name_edit.setPlaceholderText("Enter list name (e.g., 'boundary', 'vertices')")
+        self.name_edit.setText("listVal")
+        self.name_edit.setStyleSheet(input_style)
+        self.name_edit.setFixedHeight(25)
+        self.name_edit.textChanged.connect(self._on_name_changed)
         self.name_proxy = QGraphicsProxyWidget(self)
-        self.name_proxy.setWidget(self.name_input)
+        self.name_proxy.setWidget(self.name_edit)
         
         # IsNode checkbox
         self.isnode_checkbox = QCheckBox("Is Node List")
@@ -159,7 +159,7 @@ class List_CPGraphicalNode(BaseGraphicalNode):
         y += 20
         
         text_width = self.width - 2 * self.content_margin
-        self.name_input.setFixedSize(text_width, 25)
+        self.name_edit.setFixedSize(text_width, 25)
         self.name_proxy.setPos(self.content_margin, y)
         y += 30
         
@@ -210,7 +210,7 @@ class List_CPGraphicalNode(BaseGraphicalNode):
         except ImportError:
             return None
 
-        name = self.name_input.toPlainText().strip() or "listVal"
+        name = self.name_edit.text().strip() or "listVal"
         is_node = self.isnode_checkbox.isChecked()
 
         if is_node:
@@ -223,12 +223,11 @@ class List_CPGraphicalNode(BaseGraphicalNode):
                         if hasattr(connected_node, 'get_pyvnt_object'):
                             try:
                                 child_obj = connected_node.get_pyvnt_object()
-                                print(f"[List_CPGraphicalNode] Got child from connected node: {type(child_obj).__name__} | {child_obj}")
+                               
                                 if child_obj is not None:
                                     child_values.append(child_obj)
                             except Exception as e:
                                 print(f"Warning: Failed to get PyVNT object from connected child: {e}")
-            print(f"[List_CPGraphicalNode] All collected child values: {[type(v).__name__ for v in child_values]}")
             return List_CP(name, values=child_values, isNode=True)
         else:
             # Aggregate all connected value nodes (including List_CP) as a single sublist for OpenFOAM block lines
